@@ -1,5 +1,6 @@
 package com.market.spring_security_market.config.security;
 
+import com.market.spring_security_market.config.security.filter.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -8,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity//ejecuta la creación de los componentes y configura por defecto
@@ -15,8 +17,11 @@ public class HttpSecurityConfig {
 
     private final AuthenticationProvider authenticationProvider;
 
-    public HttpSecurityConfig(AuthenticationProvider authenticationProvider) {
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public HttpSecurityConfig(AuthenticationProvider authenticationProvider, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.authenticationProvider = authenticationProvider;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
 
@@ -26,6 +31,8 @@ public class HttpSecurityConfig {
                 .csrf( csrfConfig -> csrfConfig.disable())// deshabilitado ya que utilizaremos JWT
                 .sessionManagement(sessMagConfig -> sessMagConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//configuración de sesión sin estado
                 .authenticationProvider(authenticationProvider)
+                //se agrega filtro jwtAuthenticationFilter antes de que se ejecute el filtro UsernamePasswordAuthenticationFilter.class
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests( authReqConfig -> {
                         authReqConfig.requestMatchers(HttpMethod.POST,"/customers").permitAll();
                         authReqConfig.requestMatchers(HttpMethod.POST,"/auth/authenticate").permitAll();

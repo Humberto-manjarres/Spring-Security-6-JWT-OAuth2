@@ -4,11 +4,13 @@ import com.market.spring_security_market.dto.RegisteredUser;
 import com.market.spring_security_market.dto.SaveUser;
 import com.market.spring_security_market.dto.auth.AuthenticationRequest;
 import com.market.spring_security_market.dto.auth.AuthenticationResponse;
+import com.market.spring_security_market.exception.ObjectNotFoundException;
 import com.market.spring_security_market.persistence.entity.User;
 import com.market.spring_security_market.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -73,5 +75,15 @@ public class AuthenticateService {
             System.out.println("error validando token = " + e.getMessage());
             return false;
         }
+    }
+
+    public User findLoggedInUser() {
+        UsernamePasswordAuthenticationToken authentication =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
+        String username = (String) authentication.getPrincipal();
+        return  userService.findOneByUsername(username)
+                .orElseThrow(() -> new ObjectNotFoundException("User not fount. Username: "+username));
+
     }
 }

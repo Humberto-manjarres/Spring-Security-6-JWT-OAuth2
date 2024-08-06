@@ -2,6 +2,7 @@ package com.market.spring_security_market.controller;
 
 import com.market.spring_security_market.dto.auth.AuthenticationRequest;
 import com.market.spring_security_market.dto.auth.AuthenticationResponse;
+import com.market.spring_security_market.persistence.entity.User;
 import com.market.spring_security_market.service.auth.AuthenticateService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,11 @@ public class AuthenticationController {
     public ResponseEntity<Boolean> validate(@RequestParam String jwt){
         boolean isTokenValid = authenticateService.validateToken(jwt);
         return ResponseEntity.ok(isTokenValid);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<User> findMyProfile(){
+        User user = authenticateService.findLoggedInUser();
+        return ResponseEntity.ok(user);
     }
 }
