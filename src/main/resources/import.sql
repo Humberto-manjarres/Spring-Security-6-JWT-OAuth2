@@ -1,3 +1,9 @@
+
+
+INSERT INTO "user" (username, name, password, role) VALUES ('lmarquez', 'luis márquez', '$2a$10$XbkybRxCUpLyMESl7b1WOuQqy0ofWy4yzNl26.i/BqiZcsuaPW/1G', 'ROLE_CUSTOMER');
+INSERT INTO "user" (username, name, password, role) VALUES ('fperez', 'fulano pérez', '$2a$10$3fWJd3XZb1UEohmNI7fWmudG.W53WJ5du8h0FQbZ1vQ9UECOCEpPi', 'ROLE_ASSISTANT_ADMINISTRATOR');
+INSERT INTO "user" (username, name, password, role) VALUES ('mhernandez', 'mengano hernández', '$2a$10$GLlz9.qYyg/xJYh2uRJ.P.rSnvj2hFxYI1zDXge.z2gCkYAYB2wK.', 'ROLE_ADMINISTRATOR');
+
 INSERT INTO category (name, status) VALUES ('Electrónica', 'ENABLED');
 INSERT INTO category (name, status) VALUES ('Ropa', 'ENABLED');
 INSERT INTO category (name, status) VALUES ('Deportes', 'ENABLED');
