@@ -1,6 +1,6 @@
 package com.market.spring_security_market.persistence.util;
 
-public enum RolePermission {
+public enum RolePermissionEnum {
 
     //Permisos para los productos
     READ_ALL_PRODUCTS,

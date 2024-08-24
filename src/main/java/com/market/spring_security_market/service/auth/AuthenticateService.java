@@ -5,7 +5,7 @@ import com.market.spring_security_market.dto.SaveUser;
 import com.market.spring_security_market.dto.auth.AuthenticationRequest;
 import com.market.spring_security_market.dto.auth.AuthenticationResponse;
 import com.market.spring_security_market.exception.ObjectNotFoundException;
-import com.market.spring_security_market.persistence.entity.User;
+import com.market.spring_security_market.persistence.entity.security.User;
 import com.market.spring_security_market.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,7 +41,7 @@ public class AuthenticateService {
         userDto.setId(user.getId());
         userDto.setName(user.getName());
         userDto.setUsername(userDto.getUsername());
-        userDto.setRole(user.getRole().name());
+        userDto.setRole(user.getRole().getName());
 
         String jwt = jwtService.generateToken(user,generateExtraClaims(user));
         userDto.setJwt(jwt);
@@ -52,7 +52,7 @@ public class AuthenticateService {
     private Map<String, Object> generateExtraClaims(User user) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("name",user.getName());
-        extraClaims.put("role",user.getRole().name());
+        extraClaims.put("role",user.getRole().getName());
         extraClaims.put("authorities",user.getAuthorities());
         return extraClaims;
     }

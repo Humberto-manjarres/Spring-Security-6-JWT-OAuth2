@@ -1,12 +1,12 @@
-package com.market.spring_security_market.persistence.entity;
+package com.market.spring_security_market.persistence.entity.security;
 
-import com.market.spring_security_market.persistence.util.Role;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
@@ -23,21 +23,27 @@ public class User implements UserDetails { // la interfaz UserDetails representa
     private String name;
     private String password;
 
-    @Enumerated(EnumType.STRING)
+    /*@Enumerated(EnumType.STRING)
+    private RoleEnum roleEnum;*/
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (role == null)return null;
         if (role.getPermissions() == null)return null;
-        return role.getPermissions().stream()
-                .map(each -> each.name())
+        List<SimpleGrantedAuthority> authorities = role.getPermissions().stream()
+                .map(each -> each.getOperation().getName())
                 .map(each -> new SimpleGrantedAuthority(each))
                 /*.map(each ->{
                     String permission = each.name();
                     return new SimpleGrantedAuthority(permission);
                 })*/
                 .collect(Collectors.toList());
+        authorities.add(new SimpleGrantedAuthority("ROLE_".concat(this.role.getName())));//agregamos el Role del usuario a la lista de permisos.
+        return authorities;
     }
 
     @Override

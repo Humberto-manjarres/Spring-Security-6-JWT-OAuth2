@@ -1,7 +1,7 @@
 package com.market.spring_security_market.service;
 
 import com.market.spring_security_market.dto.SaveUser;
-import com.market.spring_security_market.persistence.entity.User;
+import com.market.spring_security_market.persistence.entity.security.User;
 
 import java.util.Optional;
 

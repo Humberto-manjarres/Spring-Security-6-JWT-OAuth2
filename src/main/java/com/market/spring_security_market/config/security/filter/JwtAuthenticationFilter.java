@@ -1,7 +1,7 @@
 package com.market.spring_security_market.config.security.filter;
 
 import com.market.spring_security_market.exception.ObjectNotFoundException;
-import com.market.spring_security_market.persistence.entity.User;
+import com.market.spring_security_market.persistence.entity.security.User;
 import com.market.spring_security_market.service.UserService;
 import com.market.spring_security_market.service.auth.JwtService;
 import jakarta.servlet.FilterChain;
@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwt = authorizationHeader.split(" ")[1];//se divide por un espacio y obtenemos la posición 1.
 
         //3. obtener el propietario del token (subject/username) desde el token,
-        // y esta acción a u vez válida el formato del token, la firma y la fecha de expiración.
+        // y esta acción asu vez válida el formato del token, la firma y la fecha de expiración.
         String username = jwtService.extractUsername(jwt);
 
         //4. setear objeto authentication en el security contex holder.

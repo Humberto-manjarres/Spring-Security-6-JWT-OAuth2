@@ -4,6 +4,7 @@ import com.market.spring_security_market.dto.ApiError;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,8 +24,23 @@ public class GlobalExceptionHandler {
         apiError.setBackenMessage(exception.getLocalizedMessage());
         apiError.setUrl(request.getRequestURL().toString());
         apiError.setMethod(request.getMethod());
+        apiError.setTimeStamp(LocalDateTime.now());
         apiError.setMessage("Error interno en el servidor, vuelva a intentarlo");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiError);
+    }
+
+    /**
+     * este método se lanza cuando ocurre un error de acceso por autorización, es decir, cuando no se tiene acceso a una función*/
+    @ExceptionHandler(AccessDeniedException.class)//el tipo de excepción que maneja este método AccessDeniedException.
+    public ResponseEntity<?> handlerAccessDeniedException(HttpServletRequest request, AccessDeniedException exception){
+        ApiError apiError = new ApiError();
+        apiError.setBackenMessage(exception.getLocalizedMessage());
+        apiError.setUrl(request.getRequestURL().toString());
+        apiError.setMethod(request.getMethod());
+        apiError.setTimeStamp(LocalDateTime.now());
+        apiError.setMessage("Acceso denegado. No tienes los permisos necesarios para accederá esta función." +
+                "por favor, contacta al administrador si crees que esto es un error.");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiError);
     }
 
     /**

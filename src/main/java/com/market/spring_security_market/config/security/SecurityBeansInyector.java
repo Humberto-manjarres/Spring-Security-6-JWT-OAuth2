@@ -1,7 +1,7 @@
 package com.market.spring_security_market.config.security;
 
 import com.market.spring_security_market.exception.ObjectNotFoundException;
-import com.market.spring_security_market.persistence.repository.UserRepository;
+import com.market.spring_security_market.persistence.repository.security.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

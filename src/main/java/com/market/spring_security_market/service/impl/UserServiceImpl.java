@@ -2,9 +2,11 @@ package com.market.spring_security_market.service.impl;
 
 import com.market.spring_security_market.dto.SaveUser;
 import com.market.spring_security_market.exception.InvalidPasswordException;
-import com.market.spring_security_market.persistence.entity.User;
-import com.market.spring_security_market.persistence.repository.UserRepository;
-import com.market.spring_security_market.persistence.util.Role;
+import com.market.spring_security_market.exception.ObjectNotFoundException;
+import com.market.spring_security_market.persistence.entity.security.Role;
+import com.market.spring_security_market.persistence.entity.security.User;
+import com.market.spring_security_market.persistence.repository.security.UserRepository;
+import com.market.spring_security_market.service.RoleService;
 import com.market.spring_security_market.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private RoleService roleService;
+
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -31,7 +35,8 @@ public class UserServiceImpl implements UserService {
         user.setName(newUser.getName());
         user.setUsername(newUser.getUsername());
         user.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        user.setRole(Role.ROLE_CUSTOMER);
+        Role defaultRole = roleService.findDefaultRole().orElseThrow(() -> new ObjectNotFoundException("Role Not found. Default Role"));
+        user.setRole(defaultRole);
         return userRepository.save(user);
     }
 

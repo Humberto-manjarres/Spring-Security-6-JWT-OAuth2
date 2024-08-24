@@ -2,7 +2,7 @@ package com.market.spring_security_market.controller;
 
 import com.market.spring_security_market.dto.auth.AuthenticationRequest;
 import com.market.spring_security_market.dto.auth.AuthenticationResponse;
-import com.market.spring_security_market.persistence.entity.User;
+import com.market.spring_security_market.persistence.entity.security.User;
 import com.market.spring_security_market.service.auth.AuthenticateService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +18,7 @@ public class AuthenticationController {
         this.authenticateService = authenticateService;
     }
 
+    //@PreAuthorize("permitAll()")
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest authenticationRequest){
         AuthenticationResponse rsp = authenticateService.login(authenticationRequest);
@@ -30,6 +31,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(isTokenValid);
     }
 
+    //@PreAuthorize("hasAnyRole('ADMINISTRATOR','ASSISTANT_ADMINISTRATOR','CUSTOMER')")
     @GetMapping("/profile")
     public ResponseEntity<User> findMyProfile(){
         User user = authenticateService.findLoggedInUser();

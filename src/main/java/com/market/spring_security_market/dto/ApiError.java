@@ -1,5 +1,7 @@
 package com.market.spring_security_market.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,6 +12,7 @@ public class ApiError implements Serializable {
     private String message;
     private String url;
     private String method;
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private LocalDateTime timeStamp;
     private List<String> messages;
 
