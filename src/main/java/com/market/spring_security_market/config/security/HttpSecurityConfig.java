@@ -16,6 +16,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity//habilitamos la seguridad web basada en peticiones Http y también ejecuta la creación de los componentes y configura por defecto
@@ -44,6 +51,7 @@ public class HttpSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(withDefaults())//para el manejo de los CORS
                 .csrf( csrfConfig -> csrfConfig.disable())// deshabilitado ya que utilizaremos JWT
                 .sessionManagement(sessMagConfig -> sessMagConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//configuración de sesión sin estado
                 .authenticationProvider(authenticationProvider)
@@ -58,6 +66,21 @@ public class HttpSecurityConfig {
                     exceptionConfig.accessDeniedHandler(accessDeniedHandler);//esto se agrega para el manejo de excepción cuando no tiene permisos a una función.
                 })
                 .build();
+    }
+
+
+    /*Configuración Global de CORS*/
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("https://www.google.com","http://127.0.0.1::550"));//solo se aceptan peticiones de estos dominios
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     private static void buildRequestMatchers(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authReqConfig) {

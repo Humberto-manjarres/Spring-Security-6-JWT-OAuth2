@@ -21,6 +21,7 @@ public class AuthenticationController {
     }
 
     //@PreAuthorize("permitAll()")
+    //@CrossOrigin
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest authenticationRequest){
         AuthenticationResponse rsp = authenticateService.login(authenticationRequest);
